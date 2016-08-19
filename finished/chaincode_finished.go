@@ -39,7 +39,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
-
+	fmt.Println("inside init function ")
 	err := stub.PutState("hello MyMiles", []byte(args[0]))
 	if err != nil {
 		return nil, err
