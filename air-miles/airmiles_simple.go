@@ -74,7 +74,7 @@ func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([
 	var err error
 	var jsonAsBytes []byte
 	var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
-	var bookingMiles int
+	var bookingMiles string
 	//   0       			1     		  2     		3				4			5				6			7				8
 	// "upliftingAirline", "flightNo", "bookingClass", "fromSector"		"toSector"	bookingMiles	fFP		rewardingAirline	passengerName	
 	if len(args) != 9 {
@@ -88,15 +88,16 @@ func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([
 	bookingClass = strings.ToLower(args[2])
 	fromSector = strings.ToLower(args[3])
 	toSector = strings.ToLower(args[4])
-	bookingMiles, err = strconv.Atoi(args[5])
-	if err != nil {
-		return nil, errors.New("5 argument must be a numeric string")
-	}
+	bookingMiles =strings.ToLower(args[5])
+	/////bookingMiles, err = strconv.Atoi(args[5])
+	//if err != nil {
+	//	return nil, errors.New("5 argument must be a numeric string")
+	//}
 	fFP = strings.ToLower(args[6])
 	rewardingAirline = strings.ToLower(args[7])
 	passengerName = strings.ToLower(args[8])
 
-	str := `{"upliftingAirline": "` + upliftingAirline + `", "flightNo": "` + flightNo + `", "bookingClass": "` + bookingClass + `", "fromSector": "` + fromSector + `" , "toSector": "` + toSector + `", "bookingMiles": ` + strconv.Itoa(bookingMiles) + `, "fFP": "` + fFP + `", "rewardingAirline": "` + rewardingAirline + `", "passengerName": "` + passengerName+	`"}`
+	str := `{"upliftingAirline": "` + upliftingAirline + `", "flightNo": "` + flightNo + `", "bookingClass": "` + bookingClass + `", "fromSector": "` + fromSector + `" , "toSector": "` + toSector + `", "bookingMiles": "` + bookingMiles + `", "fFP": "` + fFP + `", "rewardingAirline": "` + rewardingAirline + `", "passengerName": "` + passengerName+	`"}`
 	err = stub.PutState(args[0], []byte(str))								//store marble with id as key
 	if err != nil {
 		return nil, err
