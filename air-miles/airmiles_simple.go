@@ -20,6 +20,8 @@ import (
 	"errors"
 	"fmt"
 	"encoding/json"
+	"strconv"
+	"strings"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -27,7 +29,7 @@ import (
 type SimpleChaincode struct {
 }
 
-//var milesIndexStr = "_milesindex"				//name for the key/value that will store a list of all known marbles
+var milesIndexStr = "_milesindex"				//name for the key/value that will store a list of all known marbles
 //var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
 
 type AirMiles struct{
@@ -65,6 +67,53 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	return nil, nil
 }
 
+// ============================================================================================================================
+// Init Marble - create a new marble, store into chaincode state
+// ============================================================================================================================
+func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+	var err error
+	var upliftingAirline, flightNo, fromSector, toSector,bookingClass, bookingMiles,fFP, rewardingAirline,passengerName
+	//   0       1       2     3
+	// "asdf", "blue", "35", "bob"
+	if len(args) != 9 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 4")
+	}
+
+	fmt.Println("- start init marble")
+	
+	upliftingAirline := strings.ToLower(args[0])
+	flightNo := strings.ToLower(args[1])
+	bookingClass := strings.ToLower(args[2])
+	fromSector := strings.ToLower(args[3])
+	toSector := strings.ToLower(args[4])
+	bookingMiles := strconv.Atoi(args[5])
+	fFP := strings.ToLower(args[6])
+	rewardingAirline := strings.ToLower(args[7])
+	passengerName := strings.ToLower(args[8])
+
+	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(size) + `, "user": "` + user + `"}`
+	err = stub.PutState(args[0], []byte(str))								//store marble with id as key
+	if err != nil {
+		return nil, err
+	}
+		
+	//get the marble index
+	milesAsBytes, err := stub.GetState(milesIndexStr)
+	if err != nil {
+		return nil, errors.New("Failed to get marble index")
+	}
+	var milesindex []string
+	json.Unmarshal(milesAsBytes, &milesindex)							//un stringify it aka JSON.parse()
+	
+	//append
+	milesindex = append(milesindex, args[0])								//add marble name to index list
+	fmt.Println("! marble index: ", milesindex)
+	jsonAsBytes, _ := json.Marshal(milesindex)
+	err = stub.PutState(milesIndexStr, jsonAsBytes)						//store name of marble
+
+	fmt.Println("- end init marble")
+	return nil, nil
+}
 // Invoke isur entry point to invoke a chaincode function
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
