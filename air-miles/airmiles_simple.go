@@ -72,26 +72,30 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 // ============================================================================================================================
 func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
-	var upliftingAirline, flightNo, fromSector, toSector,bookingClass, bookingMiles,fFP, rewardingAirline,passengerName
-	//   0       1       2     3
-	// "asdf", "blue", "35", "bob"
+	var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
+	var bookingMiles int
+	//   0       			1     		  2     		3				4			5				6			7				8
+	// "upliftingAirline", "flightNo", "bookingClass", "fromSector"		"toSector"	bookingMiles	fFP		rewardingAirline	passengerName	
 	if len(args) != 9 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}
 
 	fmt.Println("- start init marble")
 	
-	upliftingAirline := strings.ToLower(args[0])
-	flightNo := strings.ToLower(args[1])
-	bookingClass := strings.ToLower(args[2])
-	fromSector := strings.ToLower(args[3])
-	toSector := strings.ToLower(args[4])
-	bookingMiles := strconv.Atoi(args[5])
-	fFP := strings.ToLower(args[6])
-	rewardingAirline := strings.ToLower(args[7])
-	passengerName := strings.ToLower(args[8])
+	upliftingAirline = strings.ToLower(args[0])
+	flightNo = strings.ToLower(args[1])
+	bookingClass = strings.ToLower(args[2])
+	fromSector = strings.ToLower(args[3])
+	toSector = strings.ToLower(args[4])
+	bookingMiles, err = strconv.Atoi(args[5])
+	if err != nil {
+		return nil, errors.New("5 argument must be a numeric string")
+	}
+	fFP = strings.ToLower(args[6])
+	rewardingAirline = strings.ToLower(args[7])
+	passengerName = strings.ToLower(args[8])
 
-	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(size) + `, "user": "` + user + `"}`
+	str := `{"upliftingAirline": "` + upliftingAirline + `", "flightNo": "` + flightNo + `", "bookingClass": "` + bookingClass + `", "fromSector": "` + fromSector + `" , "toSector": "` + toSector + `", "bookingMiles": ` + strconv.Itoa(bookingMiles) + `, "fFP": "` + fFP + `", "rewardingAirline": "` + rewardingAirline + `", "passengerName": "` + passengerName+	`"}`
 	err = stub.PutState(args[0], []byte(str))								//store marble with id as key
 	if err != nil {
 		return nil, err
