@@ -72,6 +72,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 // ============================================================================================================================
 func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
+	var jsonAsBytes []byte
 	var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
 	var bookingMiles int
 	//   0       			1     		  2     		3				4			5				6			7				8
@@ -102,6 +103,12 @@ func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([
 	}
 		
 	//get the marble index
+	var empty []string
+	jsonAsBytes, _ = json.Marshal(empty)								//marshal an emtpy array of strings to clear the index
+	err = stub.PutState(milesIndexStr, jsonAsBytes)
+	if err != nil {
+		return nil, err
+	}
 	milesAsBytes, err := stub.GetState(milesIndexStr)
 	if err != nil {
 		return nil, errors.New("Failed to get marble index")
@@ -112,7 +119,7 @@ func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([
 	//append
 	milesindex = append(milesindex, args[0])								//add marble name to index list
 	fmt.Println("! marble index: ", milesindex)
-	jsonAsBytes, _ := json.Marshal(milesindex)
+	jsonAsBytes, _ = json.Marshal(milesindex)
 	err = stub.PutState(milesIndexStr, jsonAsBytes)						//store name of marble
 
 	fmt.Println("- end init marble")
