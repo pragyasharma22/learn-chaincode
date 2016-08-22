@@ -20,7 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"encoding/json"
-	//"strconv"
+	"strconv"
 	"strings"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -34,16 +34,16 @@ var milesIndexStr = "_milesindex"				//name for the key/value that will store a 
 
 type AirMiles struct{
 	
-	UpliftingAirline string `json:"upliftingAirline"`					
-	FlightNo string `json:"flightNo"`
-	FromSector string `json:"fromSector"`
-	ToSector string `json:"toSector"`
-	BookingClass string `json:"bookingClass"`
-	BookingMiles float32 `json:"bookingMiles"`
-	FFP string `json:"fFP"`
-	RewardingAirline string `json:"rewardingAirline"`
-	RewardedMiles float32 `json:"rewardedMiles"`
-	PassengerName string `json:"passengerName"`
+	upliftingAirline string `json:"upliftingAirline"`					
+	flightNo string `json:"flightNo"`
+	fromSector string `json:"fromSector"`
+	toSector string `json:"toSector"`
+	bookingClass string `json:"bookingClass"`
+	bookingMiles int `json:"bookingMiles"`
+	fFP string `json:"fFP"`
+	rewardingAirline string `json:"rewardingAirline"`
+	rewardedMiles float32 `json:"rewardedMiles"`
+	passengerName string `json:"passengerName"`
 }
 
 func main() {
@@ -74,7 +74,7 @@ func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([
 	var err error
 	var jsonAsBytes []byte
 	var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
-	var bookingMiles string
+	var bookingMiles int
 	//   0       			1     		  2     		3				4			5				6			7				8
 	// "upliftingAirline", "flightNo", "bookingClass", "fromSector"		"toSector"	bookingMiles	fFP		rewardingAirline	passengerName	
 	if len(args) != 9 {
@@ -88,16 +88,16 @@ func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([
 	bookingClass = strings.ToLower(args[2])
 	fromSector = strings.ToLower(args[3])
 	toSector = strings.ToLower(args[4])
-	bookingMiles =strings.ToLower(args[5])
-	/////bookingMiles, err = strconv.Atoi(args[5])
-	//if err != nil {
-	//	return nil, errors.New("5 argument must be a numeric string")
-	//}
+	//bookingMiles =strings.ToLower(args[5])
+	bookingMiles, err = strconv.Atoi(args[5])
+	if err != nil {
+		return nil, errors.New("5 argument must be a numeric string")
+	}
 	fFP = strings.ToLower(args[6])
 	rewardingAirline = strings.ToLower(args[7])
 	passengerName = strings.ToLower(args[8])
 
-	str := `{"upliftingAirline": "` + upliftingAirline + `", "flightNo": "` + flightNo + `", "bookingClass": "` + bookingClass + `", "fromSector": "` + fromSector + `" , "toSector": "` + toSector + `", "bookingMiles": "` + bookingMiles + `", "fFP": "` + fFP + `", "rewardingAirline": "` + rewardingAirline + `", "passengerName": "` + passengerName+	`"}`
+	str := `{"upliftingAirline": "` + upliftingAirline + `", "flightNo": "` + flightNo + `", "bookingClass": "` + bookingClass + `", "fromSector": "` + fromSector + `" , "toSector": "` + toSector + `", "bookingMiles": `  + strconv.Itoa(bookingMiles) + `, "fFP": "` + fFP + `", "rewardingAirline": "` + rewardingAirline + `", "passengerName": "` + passengerName+	`"}`
 	err = stub.PutState(args[0], []byte(str))								//store marble with id as key
 	if err != nil {
 		return nil, err
@@ -126,6 +126,10 @@ func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([
 	fmt.Println("- end init marble")
 	return nil, nil
 }
+
+
+
+
 // Invoke isur entry point to invoke a chaincode function
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
@@ -154,12 +158,13 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 	return nil, errors.New("Received unknown function query")
 }
 
-// write - invoke function to write key/value pair
+// //function to transfer miles
 func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	//  W       V		K		P		U
 	// "25%", "50%"		"75%"	100%	"125%"
 	//var key, value string
 	var err error
+	var jsonAsBytes []byte
 	fmt.Println("running write()")
 
 	
@@ -169,8 +174,6 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	if len(args) != 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
 	}
-
-	
 	//key = args[0] //rename for funsies
 	//fmt.Println("- start set user")
 	//fmt.Println(args[0] + " - " + args[1])
@@ -203,8 +206,6 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	//res.RewardingMiles = rewardingMile
 	jsonAsBytes, _ := json.Marshal(res)
 	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the marble with id as key
-	//value = args[1]
-	//value = "fixed value"
 	//err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
