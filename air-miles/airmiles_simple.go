@@ -164,32 +164,36 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	//  W       V		K		P		U
 	// "25%", "50%"		"75%"	100%	"125%"
-	//var key, value string
+	
 	var err error
 	fmt.Println("running write()")
 
-	
-	
-	
-	
-	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
+	//var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
+	//var bookingMiles string
+	//   0       			1     		  2     		3				4			5				6			7				8
+	// "upliftingAirline", "flightNo", "bookingClass", "fromSector"		"toSector"	bookingMiles	fFP		rewardingAirline	passengerName	
+	if len(args) != 9 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}
 
-	
-	//key = args[0] //rename for funsies
-	//fmt.Println("- start set user")
-	//fmt.Println(args[0] + " - " + args[1])
-	milesAsBytes, err := stub.GetState(args[0])
-	if err != nil {
-		return nil, errors.New("Failed to get thing")
-	}
+	fmt.Println("- start init miles")
 	res := AirMiles{}
-	json.Unmarshal(milesAsBytes, &res)										//un stringify it aka JSON.parse()
+	res.upliftingAirline = strings.ToLower(args[0])
+	res.flightNo = strings.ToLower(args[1])
+	res.bookingClass = strings.ToLower(args[2])
+	res.fromSector = strings.ToLower(args[3])
+	res.toSector = strings.ToLower(args[4])
+	res.bookingMiles =strings.ToLower(args[5])
+	res.fFP = strings.ToLower(args[6])
+	res.rewardingAirline = strings.ToLower(args[7])
+	res.passengerName = strings.ToLower(args[8])
+
+	///res := AirMiles{}
+	//json.Unmarshal(milesAsBytes, &res)										//un stringify it aka JSON.parse()
 	//res.User = args[1]	
 													//change the user
 
-	var bookingClass string  = res.bookingClass
+	var bookingClass = res.bookingClass
 	var bookingMiles float64
 	bookingMiles, err   = strconv.ParseFloat(res.bookingMiles,32)
 	if err != nil {
@@ -211,6 +215,8 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 			panic("unrecognized escape character")
 		}
 	//res.RewardingMiles = rewardingMile
+	var rewardedMiles string
+	err = stub.PutState(rewardedMiles,[]byte(res.rewardedMiles) )	
 	jsonAsBytes, _ := json.Marshal(res)
 	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the miles with id as key
 	//value = args[1]
