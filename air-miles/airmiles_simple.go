@@ -170,7 +170,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	fmt.Println("running write()")
 //var jsonAsBytes []byte
 	//var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
-	//var bookingMiles string
+	var RewardedMiles string
 	//   0       			1     		  2     		3				4			5				6			7				8
 	// "upliftingAirline", "flightNo", "bookingClass", "fromSector"		"toSector"	bookingMiles	fFP		rewardingAirline	passengerName	
 	if len(args) != 9 {
@@ -203,7 +203,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	switch bookingClass {
 		case "W":
 			res.rewardedMiles = strconv.FormatFloat((bookingMiles*0.25), 'f', -1, 64)
-			
+			RewardedMiles = "1200"
 		case "V":
 			res.rewardedMiles = strconv.FormatFloat((bookingMiles*0.50), 'f', -1, 64) 
 		case "K":
@@ -218,7 +218,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	//res.RewardingMiles = rewardingMile
 	//var rewardedMiles string
 	//jsonAsBytes, _ = json.Marshal(res)
-	err = stub.PutState(res.rewardingAirline, []byte(res.rewardedMiles))								//rewrite the marble with id as key
+	err = stub.PutState("A", []byte(RewardedMiles))								//rewrite the marble with id as key
 	//err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
@@ -242,7 +242,7 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 	key = args[0]
 	//var temp string = "10"
 	fmt.Println("READ - Key :"+key)
-	valAsbytes, err := stub.GetState(key)
+	valAsbytes, err := stub.GetState("A")
 	//valAsbytes := [] byte (temp)
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
