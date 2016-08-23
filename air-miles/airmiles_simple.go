@@ -219,7 +219,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	//res.RewardingMiles = rewardingMile
 	//var rewardedMiles string
 	//jsonAsBytes, _ = json.Marshal(res)
-	A="temp"
+	A="A"
 	err = stub.PutState(A, []byte(RewardedMiles))								//rewrite the marble with id as key
 	//err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
