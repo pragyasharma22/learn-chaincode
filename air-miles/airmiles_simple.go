@@ -78,57 +78,40 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 // Init Miles - create a new miles, store into chaincode state
 // ============================================================================================================================
 func (t *SimpleChaincode) init_miles(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	var err error
-	var jsonAsBytes []byte
-	var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
-	var bookingMiles string
-	//   0       			1     		  2     		3				4			5				6			7				8
-	// "upliftingAirline", "flightNo", "bookingClass", "fromSector"		"toSector"	bookingMiles	fFP		rewardingAirline	passengerName	
-	if len(args) != 9 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 4")
+
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
-
-	fmt.Println("- start init miles")
-	
-	upliftingAirline = strings.ToLower(args[0])
-	flightNo = strings.ToLower(args[1])
-	bookingClass = strings.ToLower(args[2])
-	fromSector = strings.ToLower(args[3])
-	toSector = strings.ToLower(args[4])
-	bookingMiles =strings.ToLower(args[5])
-	/////bookingMiles, err = strconv.Atoi(args[5])
-	//if err != nil {
-	//	return nil, errors.New("5 argument must be a numeric string")
-	//}
-	fFP = strings.ToLower(args[6])
-	rewardingAirline = strings.ToLower(args[7])
-	passengerName = strings.ToLower(args[8])
-
-	str := `{"upliftingAirline": "` + upliftingAirline + `", "flightNo": "` + flightNo + `", "bookingClass": "` + bookingClass + `", "fromSector": "` + fromSector + `" , "toSector": "` + toSector + `", "bookingMiles": "` + bookingMiles + `", "fFP": "` + fFP + `", "rewardingAirline": "` + rewardingAirline + `", "passengerName": "` + passengerName+	`"}`
-	err = stub.PutState(args[0], []byte(str))								//store miles with id as key
+	fmt.Println("inside init function ")
+	err := stub.PutState("hello_world", []byte(args[0]))
 	if err != nil {
 		return nil, err
 	}
+
+	//err = stub.PutState(args[0], []byte(str))								//store miles with id as key
+	//if err != nil {
+		//return nil, err
+	//}
 		
 	//get the miles index
-	var empty []string
-	jsonAsBytes, _ = json.Marshal(empty)								//marshal an emtpy array of strings to clear the index
-	err = stub.PutState(milesIndexStr, jsonAsBytes)
-	if err != nil {
-		return nil, err
-	}
-	milesAsBytes, err := stub.GetState(milesIndexStr)
-	if err != nil {
-		return nil, errors.New("Failed to get miles index")
-	}
-	var milesindex []string
-	json.Unmarshal(milesAsBytes, &milesindex)							//un stringify it aka JSON.parse()
+	//var empty []string
+	//jsonAsBytes, _ = json.Marshal(empty)								//marshal an emtpy array of strings to clear the index
+	//err = stub.PutState(milesIndexStr, jsonAsBytes)
+	//if err != nil {
+	//	return nil, err
+	///}
+	////milesAsBytes, err := stub.GetState(milesIndexStr)
+	//if err != nil {
+		//return nil, errors.New("Failed to get miles index")
+	//}
+	//var milesindex []string
+	//json.Unmarshal(milesAsBytes, &milesindex)							//un stringify it aka JSON.parse()
 	
 	//append
-	milesindex = append(milesindex, args[0])								//add miles name to index list
-	fmt.Println("! miles index: ", milesindex)
-	jsonAsBytes, _ = json.Marshal(milesindex)
-	err = stub.PutState(milesIndexStr, jsonAsBytes)						//store name of miles
+	//milesindex = append(milesindex, args[0])								//add miles name to index list
+	//fmt.Println("! miles index: ", milesindex)
+	//jsonAsBytes, _ = json.Marshal(milesindex)
+	//err = stub.PutState(milesIndexStr, jsonAsBytes)						//store name of miles
 
 	fmt.Println("- end init miles")
 	return nil, nil
