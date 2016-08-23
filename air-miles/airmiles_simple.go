@@ -31,6 +31,7 @@ type SimpleChaincode struct {
 
 var milesIndexStr = "_milesindex"				//name for the key/value that will store a list of all known miless
 //var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
+var RewardedMiles string
 
 type AirMiles struct{
 	
@@ -215,8 +216,8 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 			panic("unrecognized escape character")
 		}
 	//res.RewardingMiles = rewardingMile
-	var rewardedMiles string
-	err = stub.PutState(rewardedMiles,[]byte(res.rewardedMiles) )	
+	//var rewardedMiles string
+	err = stub.PutState(RewardedMiles,[]byte(res.rewardedMiles) )	
 	//jsonAsBytes, _ := json.Marshal(res)
 	err = stub.PutState(args[0], []byte(res.rewardedMiles))								//rewrite the miles with id as key
 	//value = args[1]
@@ -225,7 +226,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	if err != nil {
 		return nil, err
 	}
-	return nil, nil
+	return []byte(RewardedMiles), nil
 }
 
 // read - query function to read key/value pair
