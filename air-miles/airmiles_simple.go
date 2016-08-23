@@ -170,7 +170,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	fmt.Println("running write()")
 //var jsonAsBytes []byte
 	//var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
-	var RewardedMiles string
+	var RewardedMiles ="500" 
 	//   0       			1     		  2     		3				4			5				6			7				8
 	// "upliftingAirline", "flightNo", "bookingClass", "fromSector"		"toSector"	bookingMiles	fFP		rewardingAirline	passengerName	
 	if len(args) != 9 {
@@ -202,7 +202,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	}
 	switch bookingClass {
 		case "W":
-			res.rewardedMiles = strconv.FormatFloat((bookingMiles*0.25), 'f', -1, 64)
+			//res.rewardedMiles = strconv.FormatFloat((bookingMiles*0.25), 'f', -1, 64)
 			RewardedMiles = "1200"
 		case "V":
 			res.rewardedMiles = strconv.FormatFloat((bookingMiles*0.50), 'f', -1, 64) 
@@ -213,12 +213,14 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 		case "U":
 			res.rewardedMiles = strconv.FormatFloat((bookingMiles*1.25), 'f', -1, 64)
 		default:
+			RewardedMiles = "600"
 			panic("unrecognized escape character")
 		}
 	//res.RewardingMiles = rewardingMile
 	//var rewardedMiles string
 	//jsonAsBytes, _ = json.Marshal(res)
-	err = stub.PutState("A", []byte(RewardedMiles))								//rewrite the marble with id as key
+	A="temp"
+	err = stub.PutState(A, []byte(RewardedMiles))								//rewrite the marble with id as key
 	//err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
