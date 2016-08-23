@@ -217,8 +217,8 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	//res.RewardingMiles = rewardingMile
 	var rewardedMiles string
 	err = stub.PutState(rewardedMiles,[]byte(res.rewardedMiles) )	
-	jsonAsBytes, _ := json.Marshal(res)
-	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the miles with id as key
+	//jsonAsBytes, _ := json.Marshal(res)
+	err = stub.PutState(args[0], []byte(res.rewardedMiles))								//rewrite the miles with id as key
 	//value = args[1]
 	//value = "fixed value"
 	//err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
