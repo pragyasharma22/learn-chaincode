@@ -31,7 +31,7 @@ type SimpleChaincode struct {
 
 var milesIndexStr = "_milesindex"				//name for the key/value that will store a list of all known miless
 //var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
-var A string
+
 
 type AirMiles struct{
 	
@@ -219,8 +219,8 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	//res.RewardingMiles = rewardingMile
 	//var rewardedMiles string
 	//jsonAsBytes, _ = json.Marshal(res)
-	A="A"
-	err = stub.PutState(A, []byte(RewardedMiles))								//rewrite the marble with id as key
+	//A="A"
+	err = stub.PutState("A", []byte(RewardedMiles))								//rewrite the marble with id as key
 	//err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
