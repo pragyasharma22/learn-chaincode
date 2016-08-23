@@ -31,7 +31,7 @@ type SimpleChaincode struct {
 
 var milesIndexStr = "_milesindex"				//name for the key/value that will store a list of all known miless
 //var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
-var RewardedMiles string
+var A string
 
 type AirMiles struct{
 	
@@ -168,7 +168,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	
 	var err error
 	fmt.Println("running write()")
-
+//var jsonAsBytes []byte
 	//var upliftingAirline, flightNo, fromSector, toSector, bookingClass, fFP, rewardingAirline, passengerName string
 	//var bookingMiles string
 	//   0       			1     		  2     		3				4			5				6			7				8
@@ -217,16 +217,17 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 		}
 	//res.RewardingMiles = rewardingMile
 	//var rewardedMiles string
-	err = stub.PutState(RewardedMiles,[]byte(res.rewardedMiles) )	
-	//jsonAsBytes, _ := json.Marshal(res)
-	err = stub.PutState(args[0], []byte(res.rewardedMiles))								//rewrite the miles with id as key
-	//value = args[1]
-	//value = "fixed value"
+	//jsonAsBytes, _ = json.Marshal(res)
+	err = stub.PutState(A, []byte(res.rewardedMiles))								//rewrite the marble with id as key
 	//err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
 	}
-	return []byte(RewardedMiles), nil
+	
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
 
 // read - query function to read key/value pair
@@ -239,7 +240,7 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 	}
 
 	key = args[0]
-	valAsbytes, err := stub.GetState(key)
+	valAsbytes, err := stub.GetState(A)
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
 		return nil, errors.New(jsonResp)
