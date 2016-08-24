@@ -112,8 +112,9 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	// Perform the execution
 	X, err = strconv.Atoi(args[2])
+	var t1 = 2	
 	Aval = Aval - X
-	Bval = Bval + (X*2)
+	Bval = Bval + (X*t1)
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
 
 	// Write the state back to the ledger
