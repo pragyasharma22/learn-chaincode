@@ -89,18 +89,18 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	A = args[0]
 	B = args[1]
-	//bookingClass = args[2]
+
 	// Get the state from the ledger
 	// TODO: will be nice to have a GetAllState call to ledger
 	Avalbytes, err := stub.GetState(A)
 	if err != nil {
-		return nil, errors.New("Failed to get states")
+		return nil, errors.New("Failed to get state")
 	}
 	if Avalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Aval, _ = strconv.Atoi(string(Avalbytes)) 
- 
+	Aval, _ = strconv.Atoi(string(Avalbytes))
+
 	Bvalbytes, err := stub.GetState(B)
 	if err != nil {
 		return nil, errors.New("Failed to get state")
@@ -110,13 +110,12 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	}
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
-	var t1 float32
-	t1=0.75
 	// Perform the execution
-	X, err = strconv.Atoi(args[2]) //x booking miles
+	X, err = strconv.Atoi(args[2])
 	Aval = Aval - X
-	Bval = Bval +int(float32(X)*t1) //rewarded miles
+	Bval = Bval + (X*2)
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
+
 	// Write the state back to the ledger
 	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
 	if err != nil {
