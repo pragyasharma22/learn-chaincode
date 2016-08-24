@@ -111,22 +111,12 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
 	var t1 float32
+	t1=1.0
 	//Class
-	switch bookingClass {
-		case "W":
-			t1 = 0.25
-		case "V":
-			t1 = 0.50
-		case "K":
-			t1 = 0.75
-		case "P":
-			t1 = 1.0
-		case "U":
-			t1 = 1.25
-		default:
-			t1 = 1.0
-			panic("unrecognized escape character")
-		}
+	if bookingClass == "W" {
+		t1=0.25
+	}
+
 	
 	// Perform the execution
 	X, err = strconv.Atoi(args[3]) //x booking miles
