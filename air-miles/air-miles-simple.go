@@ -112,7 +112,9 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	// Perform the execution
 	X, err = strconv.Atoi(args[2]) //x booking miles
 	Aval = Aval - X
-	Bval = Bval +(X*2) //rewarded miles
+	var t1 float32
+	t1 = 0.75
+	Bval = Bval +int(float32(X)*t1) //rewarded miles
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
 
 	// Write the state back to the ledger
