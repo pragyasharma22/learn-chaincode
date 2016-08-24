@@ -99,7 +99,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 		return nil, errors.New("Entity not found")
 	}
 	Aval, _ = strconv.Atoi(string(Avalbytes)) 
-
+ 
 	Bvalbytes, err := stub.GetState(B)
 	if err != nil {
 		return nil, errors.New("Failed to get state")
