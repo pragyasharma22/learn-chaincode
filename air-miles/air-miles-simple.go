@@ -78,7 +78,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 		return t.delete(stub, args)
 	}
 
-	var A, B,bookingClass  string    // Entities
+	var A, B string    // Entities
 	var Aval, Bval int // Asset holdings
 	var X int          // Transaction value
 	var err error
@@ -89,7 +89,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	A = args[0]
 	B = args[1]
-	bookingClass = args[2]
+	//bookingClass = args[2]
 	// Get the state from the ledger
 	// TODO: will be nice to have a GetAllState call to ledger
 	Avalbytes, err := stub.GetState(A)
