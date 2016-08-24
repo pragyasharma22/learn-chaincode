@@ -77,18 +77,18 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 		return t.delete(stub, args)
 	}
 
-	var A, B string    // Entities
+	var A, B,bookingClass  string    // Entities
 	var Aval, Bval int // Asset holdings
 	var X int          // Transaction value
 	var err error
 
-	if len(args) != 3 {
+	if len(args) != 4 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 3")
 	}
 
 	A = args[0]
 	B = args[1]
-
+	bookingClass = args[2]
 	// Get the state from the ledger
 	// TODO: will be nice to have a GetAllState call to ledger
 	Avalbytes, err := stub.GetState(A)
@@ -109,14 +109,29 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	}
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
-	// Perform the execution
-	X, err = strconv.Atoi(args[2]) //x booking miles
-	Aval = Aval - X
 	var t1 float32
-	t1 = 0.75
+	//Class
+	switch bookingClass {
+		case "W":
+			t1 = 0.25
+		case "V":
+			t1 = 0.50
+		case "K":
+			t1 = 0.75
+		case "P":
+			t1 = 1.0
+		case "U":
+			t1 = 1.25
+		default:
+			t1 = 1.0
+			panic("unrecognized escape character")
+		}
+	
+	// Perform the execution
+	X, err = strconv.Atoi(args[3]) //x booking miles
+	Aval = Aval - X
 	Bval = Bval +int(float32(X)*t1) //rewarded miles
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
-
 	// Write the state back to the ledger
 	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
 	if err != nil {
