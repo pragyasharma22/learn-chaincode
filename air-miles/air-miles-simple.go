@@ -98,7 +98,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	if Avalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Aval, _ = strconv.Atoi(string(Avalbytes))
+	Aval, _ = strconv.Atoi(string(Avalbytes)) 
 
 	Bvalbytes, err := stub.GetState(B)
 	if err != nil {
@@ -110,9 +110,9 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
 	// Perform the execution
-	X, err = strconv.Atoi(args[2])
+	X, err = strconv.Atoi(args[2]) //x booking miles
 	Aval = Aval - X
-	Bval = Bval + X
+	Bval = Bval +(X*2) //rewarded miles
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
 
 	// Write the state back to the ledger
