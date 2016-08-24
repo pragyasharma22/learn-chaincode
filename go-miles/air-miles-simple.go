@@ -82,14 +82,12 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	var Aval, Bval int // Asset holdings
 	var X int          // Transaction value
 	var err error
-	var bookingClass string
-	if len(args) != 4 {
+	if len(args) != 3 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 3")
 	}
 
 	A = args[0]
 	B = args[1]
-	bookingClass = args[3]
 	// Get the state from the ledger
 	// TODO: will be nice to have a GetAllState call to ledger
 	Avalbytes, err := stub.GetState(A)
@@ -128,8 +126,6 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	if err != nil {
 		return nil, err
 	}
-bookingClass="w"
-fmt.Printf("bookingClass = %d, ",bookingClass )
 
 	err = stub.PutState(B, []byte(strconv.Itoa(Bval)))
 	if err != nil {
