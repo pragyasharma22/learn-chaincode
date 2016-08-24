@@ -111,11 +111,11 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
 	var t1 float32
-	t1=1.0
+	//t1=1.0
 	//Class
-	if bookingClass == "W" {
+	///if (compare(bookingClass,"W") {
 		t1=0.25
-	}
+	//}
 
 	
 	// Perform the execution
