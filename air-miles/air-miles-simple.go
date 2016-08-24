@@ -94,7 +94,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	// TODO: will be nice to have a GetAllState call to ledger
 	Avalbytes, err := stub.GetState(A)
 	if err != nil {
-		return nil, errors.New("Failed to get state")
+		return nil, errors.New("Failed to get states")
 	}
 	if Avalbytes == nil {
 		return nil, errors.New("Entity not found")
@@ -111,8 +111,6 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
 	var t1 float32
-
-
 	t1=0.75
 	// Perform the execution
 	X, err = strconv.Atoi(args[2]) //x booking miles
