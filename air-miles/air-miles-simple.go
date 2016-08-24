@@ -83,7 +83,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	var X int          // Transaction value
 	var err error
 
-	if len(args) != 5 {
+	if len(args) != 4 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 3")
 	}
 
@@ -119,7 +119,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	
 	// Perform the execution
-	X, err = strconv.Atoi(args[3]) //x booking miles
+	X, err = strconv.Atoi(args[2]) //x booking miles
 	Aval = Aval - X
 	Bval = Bval +int(float32(X)*t1) //rewarded miles
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
