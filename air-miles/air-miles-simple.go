@@ -112,6 +112,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	// Perform the execution
 	X, err = strconv.Atoi(args[2])
+	var t1 float32
 	t1=0.75
 	// Perform the execution
 	Aval = Aval - X
