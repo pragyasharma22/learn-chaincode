@@ -45,12 +45,12 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	B = args[1]
 	
 	// Write the state to the ledger
-	err = stub.PutState(A, []byte(A))
+	err = stub.PutState("A", []byte(A))
 	if err != nil {
 		return nil, err
 	}
 
-	err = stub.PutState(B, []byte(B))
+	err = stub.PutState("B", []byte(B))
 	if err != nil {
 		return nil, err
 	}
@@ -75,12 +75,12 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	B = args[1]
 	
 	// Write the state back to the ledger
-	err = stub.PutState(A, []byte(A))
+	err = stub.PutState("A", []byte(A))
 	if err != nil {
 		return nil, err
 	}
 
-	err = stub.PutState(B, []byte(B))
+	err = stub.PutState("B", []byte(B))
 	if err != nil {
 		return nil, err
 	}
