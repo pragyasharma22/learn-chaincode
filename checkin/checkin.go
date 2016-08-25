@@ -71,8 +71,9 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	B = args[1]
 	C = args[2]
 		
+	fmt.Println("2-Uplifiting Airlines : %s", string(C))
 	// Write the state back to the ledger
-	err = stub.PutState(C, []byte(B))
+	err = stub.PutState("AC", []byte(B))
 	if err != nil {
 		return nil, err
 	}
