@@ -77,7 +77,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 		return t.delete(stub, args)
 	}
 
-	var A, B string    // Entities
+	var A, B, temp string    // Entities
 
 	var err error
 	if len(args) != 2 {
@@ -90,7 +90,8 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	// TODO: will be nice to have a GetAllState call to ledger
 	
 	// Write the state back to the ledger
-	err = stub.PutState(A, []byte(A+" "+B))
+	temp = A + " " + B
+	err = stub.PutState(A, []byte(temp))
 	if err != nil {
 		return nil, err
 	}
