@@ -33,34 +33,22 @@ type SimpleChaincode struct {
 }
 
 func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	var A, B , C string    // Entities
+	var  B  string    // Entities
 	var err error
 
-	if len(args) != 3 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 3 ")
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 1 ")
 	}
 	// Initialize the chaincode
-	A = args[0]
 	
-	B = args[1]
+	B = args[0]
 	
-	C = args[2]
 	// Write the state to the ledger
-	err = stub.PutState("A", []byte(A))
-	if err != nil {
-		return nil, err
-	}
-
-	err = stub.PutState("B", []byte(B))
+	err = stub.PutState("AC", []byte(B))
 	if err != nil {
 		return nil, err
 	}
 	
-	err = stub.PutState("C", []byte(C))
-	if err != nil {
-		return nil, err
-	}
-
 	return nil, nil
 }
 
@@ -73,23 +61,21 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	var A, B, C string    // Entities
 	var err error
-	if len(args) != 3 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 3")
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
 	A = args[0]
 	fmt.Printf("Uplifiting Airlines : %s", string(A))
 	B = args[1]
 	C = args[2]
-	
+		
 	// Write the state back to the ledger
-	
 	err = stub.PutState(C, []byte(B))
 	if err != nil {
 		return nil, err
 	}
 
-	
 	return nil, nil
 }
 
