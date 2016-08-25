@@ -66,7 +66,8 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	}
 
 	A = args[0]
-	fmt.Printf("Uplifiting Airlines : %s", string(A))
+	println("1-Uplifiting Airlines : %s", string(A))
+	fmt.Println("2-Uplifiting Airlines : %s", string(A))
 	B = args[1]
 	C = args[2]
 		
